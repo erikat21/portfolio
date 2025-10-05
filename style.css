@@ -1,5 +1,5 @@
 :root {
-    --color-accent: oklch(84.449% 0.12834 203.835)
+    --color-accent: oklch(78.344% 0.1342 206.493)
 }
 html {
     accent-color: var(--color-accent);
@@ -83,6 +83,7 @@ nav li a:hover {
     line-height: 1.1;
     text-wrap: balance;
     margin: 0.5em 0;
+    color: var(--color-accent);
  }
  h2 {
     font-size: 2em;
@@ -95,3 +96,49 @@ nav li a:hover {
     text-wrap: balance;
     margin: 0.5em 0;
  }
+ .Projects h3 {
+    color: var(--color-accent);
+ }
+ .Education h3 {
+    color: var(--color-accent);
+ }
+ .Work h3 {
+    color: var(--color-accent);
+ }
+  .skills h3 {
+    color: var(--color-accent) !important;
+ }
+ .skills-category ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.3em 1em;
+    list-style-type: none;
+    padding: 0;
+    margin: 0.5em 0 1em;
+ }
+ .skills-category li {
+    background: #f0f0f0;
+    padding: 0.3em 0.6em;
+    border-radius: 0.25em;
+    font-size: 0.95em;
+}
+.Education {
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
+.Work {
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
+.Contact {
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
+.Projects {
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
