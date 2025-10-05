@@ -42,3 +42,24 @@ nav li a:hover {
     padding-bottom: 0.6em;
     background-color: oklch(from var(--color-accent) 95% 5% h);
 }
+/* input, textarea, button, select {
+    font: inherit;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+} */
+/* label {
+    display: block;
+    margin-block: 0em 0em;
+} */
+ form {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    /* grid-column: 1 / -1; */
+    gap: 1em;
+    align-items: center;
+    font: inherit;
+ }
+ button {
+    grid-column: 1 / span 2;
+ }
