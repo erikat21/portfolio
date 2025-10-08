@@ -117,7 +117,7 @@ nav li a:hover {
     margin: 0.5em 0 1em;
  }
  .skills-category li {
-    background: #f0f0f0;
+    background: oklch(92.101% 0.02856 202.299);
     padding: 0.3em 0.6em;
     border-radius: 0.25em;
     font-size: 0.95em;
