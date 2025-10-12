@@ -13,7 +13,35 @@ body {
     margin: 0 auto;
     padding: 0 20px;
 }
-nav ul {
+nav {
+    display: flex;
+    border-bottom: 1px solid oklch(80% 3% 200);
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    flex: 1;                  /* distribute links evenly */
+    display: block;            /* fill the flex space */
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.5em;
+}
+
+nav a.current {
+    border-bottom: 0.4em solid oklch(80% 3% 200);
+    padding-bottom: 0.6em;
+    font-weight: bold;
+}
+
+nav a:hover {
+    border-bottom: 0.4em solid var(--color-accent);
+    padding-bottom: 0.6em;
+    background-color: oklch(from var(--color-accent) 95% 5% h);
+}
+
+/* nav ul {
     display: flex;
     list-style: none;
     margin: 0;
@@ -41,7 +69,8 @@ nav li a:hover {
     border-bottom: 0.4em solid var(--color-accent);
     padding-bottom: 0.6em;
     background-color: oklch(from var(--color-accent) 95% 5% h);
-}
+} */
+ 
 /* input, textarea, button, select {
     font: inherit;
     display: block;
