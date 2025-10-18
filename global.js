@@ -99,3 +99,54 @@ form?.addEventListener('submit', (event) => {
     // Open the URL
     location.href = url;
 });
+
+export async function fetchJSON(url) {
+  try {
+    // Fetch the JSON file from the given URL
+    const response = await fetch(url);
+    console.log(response)
+    if (!response.ok) {
+      throw new Error(`Failed to fetch projects: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching or parsing JSON data:', error);
+  }
+}
+
+export function renderProjects(projects, containerElement, headingLevel = 'h2') {
+  if (!containerElement || !(containerElement instanceof HTMLElement)) {
+    console.error('Invalid container element provided to renderProjects.');
+    return;
+  }
+
+  if (!Array.isArray(projects)){
+    console.error('Projects parameter must be an array.');
+    containerElement.innerHTML = '<p>No projects to display.</p>';
+    return;
+  }
+
+  containerElement.innerHTML = ''; // Clear container before rendering
+  
+  const validHeadings = ['h1','h2','h3','h4','h5','h6'];
+  const headingTag = validHeadings.includes(headingLevel.toLowerCase()) ? headingLevel : 'h2';
+  
+  projects.forEach(project => {
+    const article = document.createElement('article');
+    const title = project.title || 'Untitled Project';
+    const description = project.description || '';
+    const image = project.image || '';
+
+    article.innerHTML = `
+      <${headingTag}>${title}</${headingTag}>
+      ${image ? `<img src="${image}" alt="${title}">` : ''}
+      <p>${description}</p>
+    `;
+
+    containerElement.appendChild(article);
+  });
+  }
+  
+
+
