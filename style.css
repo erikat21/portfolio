@@ -181,3 +181,31 @@ nav li a:hover {
     font-family: inherit;
     z-index: 1000;
 }
+
+#profile-stats dl {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1em;
+  text-align: center;
+}
+
+#profile-stats dt {
+  font-weight: bold;
+  grid-row: 1;
+}
+
+#profile-stats dd {
+  grid-row: 2; 
+  margin: 0;   
+}
+
+.projects img {
+  width: 300px;   /* set a fixed width */
+  height: 200px;  /* set a fixed height */
+  object-fit: cover; /* crop/scale image to fill dimensions without distortion */
+  border-radius: 8px; /* optional rounded corners */
+}
+
+ .Home h2 {
+    color: var(--color-accent);
+ }
