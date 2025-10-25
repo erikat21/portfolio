@@ -140,9 +140,10 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
     const year = project.year || '';
 
     article.innerHTML = `
-      <${headingTag}>${title} (${year})</${headingTag}>
+      <${headingTag}>${title}</${headingTag}>
       ${image ? `<img src="${image}" alt="${title}">` : ''}
-      <p>${description}</p>
+      <div class="description">${description}</div>
+      <p class="year">c. ${year}</p>
     `;
 
     containerElement.appendChild(article);

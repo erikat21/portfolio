@@ -96,11 +96,11 @@ nav li a:hover {
  .projects {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-    gap: 1em;
+    gap: 0.5em;
  }
  .projects article {
     display: grid;
-    grid-template-rows: subgrid;
+    grid-template-rows: auto auto 1fr auto;
     grid-row: span 3;
     gap: 1em;
     /* padding: 0.5em; */
@@ -209,3 +209,10 @@ nav li a:hover {
  .Home h2 {
     color: var(--color-accent);
  }
+ .year {
+  display: block;
+  margin-top: 0.5em;
+  font-size: 0.9em;
+  color: #777;
+  text-align: left;
+}
