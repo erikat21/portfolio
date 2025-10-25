@@ -96,13 +96,13 @@ nav li a:hover {
  .projects {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-    gap: 0.5em;
+    gap: 1em;
  }
  .projects article {
     display: grid;
     grid-template-rows: auto auto 1fr auto;
     grid-row: span 3;
-    gap: 1em;
+    gap: 0.5em;
     /* padding: 0.5em; */
  }
  .projects article h2 {
@@ -215,4 +215,11 @@ nav li a:hover {
   font-size: 0.9em;
   color: #777;
   text-align: left;
+}
+
+#projects-plot {
+  max-width: 20em;
+  margin-block: 2em;
+
+  overflow: visible;
 }
