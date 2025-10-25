@@ -95,14 +95,19 @@ nav li a:hover {
  }
  .projects {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-    gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+    gap: 1rem;
+    width: 100%;
+    box-sizing: border-box;
  }
  .projects article {
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    display: flex;
+    /* grid-template-rows: auto auto 1fr auto; */
+    flex-direction: column;
     grid-row: span 3;
     gap: 0.5em;
+    width: 100%;
+    box-sizing: border-box;
     /* padding: 0.5em; */
  }
  .projects article h2 {
@@ -200,10 +205,11 @@ nav li a:hover {
 }
 
 .projects img {
-  width: 300px;   /* set a fixed width */
-  height: 200px;  /* set a fixed height */
+  width: 100%;   /* set a fixed width */
+  height: austo;  /* set a fixed height */
   object-fit: cover; /* crop/scale image to fill dimensions without distortion */
   border-radius: 8px; /* optional rounded corners */
+  
 }
 
  .Home h2 {
@@ -222,4 +228,48 @@ nav li a:hover {
   margin-block: 2em;
 
   overflow: visible;
+}
+
+.legend {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9em, 1fr));
+  gap: 1em;
+  border: 2px solid #ccc;
+  border-radius: 0.5em;
+  padding: 1em;
+  margin-top: 0.5em;
+  background: #fafafa;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5em; /* smaller than grid gap */
+  font-size: 0.9em;
+}
+
+.legend-item .swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background: var(--color);
+  border-radius: 0.2em; /* rounded square */
+  /* or make it a circle: border-radius: 50%; */
+}
+
+.container {
+    display: flex;
+    align-items: flex-start; /* vertically center legend and chart */
+    gap: 2em;            /* space between chart and legend */
+    margin-left: 0;
+    /* justify-content: center; center horizontally in parent */
+    /* flex-wrap: wrap;     makes it responsive on small screens */
+    /* margin: 2em auto; */
+    max-width: 900px;
+}
+.container {
+  display: flex;
+  align-items: center;  /* vertically center legend with pie */
+  gap: 2em;
 }
