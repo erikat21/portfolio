@@ -84,20 +84,6 @@ function renderPieChart(allProjects) {
   });
 }
 
-
-
-function updateHighlight(svg, legend, data, colors) {
-  // update which slice is highlighted
-  svg.selectAll('path')
-    .attr('class', d => (d.data.label === selectedYear ? 'selected' : ''));
-
-  legend.selectAll('li')
-    .attr('class', (d, i) => {
-      const label = data[i].label;
-      return label === selectedYear ? 'legend-item selected' : 'legend-item';
-    });
-}
-
 function applyCombinedFilter() {
   let filtered = projects.filter(p => {
     const matchesQuery =
