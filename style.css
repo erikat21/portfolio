@@ -283,7 +283,7 @@ path {
 
 .stats dt {
   font-weight: bold;
-  color: var(--color-accent);
+  color: black;
   grid-row: 1;
   margin-bottom: 0.2rem;
 }
@@ -292,5 +292,23 @@ path {
   margin: 0;
   color: #666;
   /* grid-row: 2; */
+}
+
+.summary h2{
+  color: var(--color-accent);
+}
+
+.commits h2 {
+  color: var(--color-accent);
+}
+
+.gridlines line {
+  stroke: #ccc;        /* light gray color */
+  stroke-opacity: 0.4; /* semi-transparent */
+  shape-rendering: crispEdges; /* keeps lines sharp */
+}
+
+.gridlines path {
+  stroke-width: 0;     /* hide the vertical axis line */
 }
 
