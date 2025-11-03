@@ -53,26 +53,20 @@ function renderCommitInfo(data, commits) {
   dl.append('dt').text('Total Commits');
   dl.append('dd').text(commits.length);
 
-  // Array of weekday names
+  const numFiles = d3.groups(data, d => d.file).length
+  dl.append('dt').text('Total Files');
+  dl.append('dd').text(numFiles);
+
   const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  // Count commits per weekday
-  const weekdayCounts = commits.reduce((acc, c) => {
-  const day = weekdays[c.datetime.getDay()]; // getDay() returns 0 (Sun) to 6 (Sat)
-  acc[day] = (acc[day] || 0) + 1;
-  return acc;
-}, {});
-  let mostCommonDay = null;
-  let maxCount = 0;
-
-  for (const [day, count] of Object.entries(weekdayCounts)) {
-    if (count > maxCount) {
-      mostCommonDay = day;
-      maxCount = count;
-  }
-}
+  const commitsByDay = d3.groups(commits, d => weekdays[d.datetime.getDay()]);
+  const dayCounts = commitsByDay.map(([day, commits]) => ({
+    day,
+    count: commits.length
+}));
+  const mostActiveDay = d3.greatest(dayCounts, d => d.count)?.day;
   dl.append('dt').text('Day Most Work is Done');
-  dl.append('dd').text(`${mostCommonDay}`);
+  dl.append('dd').text(mostActiveDay);
+
 
   const avgLineLength = d3.mean(data, d => d.length);
   dl.append('dt').text('Avg Line Length');
