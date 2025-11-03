@@ -42,46 +42,6 @@ nav a:hover {
     background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
 }
 
-/* nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: oklch(80% 3% 200);
-}
-nav li {
-    flex: 1;
-}
-nav li a {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    padding: 0.5em;
-}
-nav li a.current {
-    border-bottom: 0.4em solid oklch(80% 3% 200);
-    padding-bottom: 0.6em;
-    font-weight: bold;
-}
-nav li a:hover {
-    border-bottom: 0.4em solid var(--color-accent);
-    padding-bottom: 0.6em;
-    background-color: oklch(from var(--color-accent) 95% 5% h);
-} */
-
-/* input, textarea, button, select {
-    font: inherit;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-} */
-/* label {
-    display: block;
-    margin-block: 0em 0em;
-} */
  form {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -310,5 +270,27 @@ path {
 
 .selected:is(.legend-item) .swatch {
   background: var(--color); /* highlight legend swatch */
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit);
+  column-gap: 2rem;
+  margin-top: 1rem;
+  font-family: sans-serif;
+  justify-content: start;
+}
+
+.stats dt {
+  font-weight: bold;
+  color: var(--color-accent);
+  grid-row: 1;
+  margin-bottom: 0.2rem;
+}
+
+.stats dd {
+  margin: 0;
+  color: #666;
+  /* grid-row: 2; */
 }
 
