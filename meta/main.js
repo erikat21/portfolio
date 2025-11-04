@@ -143,7 +143,6 @@ const gridlines = svg
 gridlines.call(d3.axisLeft(yScale).tickFormat('').tickSize(-usableArea.width));
 
 const dots = svg.append('g').attr('class', 'dots');
-
 dots
   .selectAll('circle')
   .data(commits)
@@ -160,6 +159,7 @@ dots
   .on('mouseleave', () => {
     updateTooltipVisibility(false);
   });
+
 }
 
 function renderTooltipContent(commit) {
@@ -182,9 +182,33 @@ function updateTooltipVisibility(isVisible) {
 
 function updateTooltipPosition(event) {
   const tooltip = document.getElementById('commit-tooltip');
-  tooltip.style.left = `${event.clientX}px`;
-  tooltip.style.top = `${event.clientY}px`;
+
+  // Make visible temporarily to measure size
+  tooltip.hidden = false;
+
+  // Reset width so it recalculates for small screens
+  tooltip.style.width = 'auto';
+
+  const tooltipRect = tooltip.getBoundingClientRect();
+  const padding = 5;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  let x = event.clientX + 10;
+  let y = event.clientY + 10;
+
+  // Clamp within viewport
+  if (x + tooltipRect.width > viewportWidth - padding) {
+    x = Math.max(padding, viewportWidth - tooltipRect.width - padding);
+  }
+  if (y + tooltipRect.height > viewportHeight - padding) {
+    y = Math.max(padding, viewportHeight - tooltipRect.height - padding);
+  }
+
+  tooltip.style.left = `${x}px`;
+  tooltip.style.top = `${y}px`;
 }
+
 
 let data = await loadData();
 let commits = processCommits(data);
