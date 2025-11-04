@@ -95,93 +95,92 @@ function renderScatterPlot(data, commits) {
   .attr('viewBox', `0 0 ${width} ${height}`)
   .style('overflow', 'visible');
 
-const margin = { top: 10, right: 10, bottom: 30, left: 20 };
-const usableArea = {
-  top: margin.top,
-  right: width - margin.right,
-  bottom: height - margin.bottom,
-  left: margin.left,
-  width: width - margin.left - margin.right,
-  height: height - margin.top - margin.bottom,
+  const margin = { top: 10, right: 10, bottom: 30, left: 20 };
+  const usableArea = {
+    top: margin.top,
+    right: width - margin.right,
+    bottom: height - margin.bottom,
+    left: margin.left,
+    width: width - margin.left - margin.right,
+    height: height - margin.top - margin.bottom,
 };
 
-xScale = d3.scaleTime()
-  .domain(d3.extent(commits, (d) => d.datetime))
-  .range([usableArea.left, usableArea.right])
-  .nice();
+  xScale = d3.scaleTime()
+    .domain(d3.extent(commits, (d) => d.datetime))
+    .range([usableArea.left, usableArea.right])
+    .nice();
 
-yScale = d3.scaleLinear()
-  .domain([0, 24])
-  .range([usableArea.bottom, usableArea.top]);
-
+  yScale = d3.scaleLinear()
+    .domain([0, 24])
+    .range([usableArea.bottom, usableArea.top]);
 
 // Update scales with new ranges
-xScale.range([usableArea.left, usableArea.right]);
-yScale.range([usableArea.bottom, usableArea.top]);
+  xScale.range([usableArea.left, usableArea.right]);
+  yScale.range([usableArea.bottom, usableArea.top]);
 
   // Create the axes
-const xAxis = d3.axisBottom(xScale);
-const yAxis = d3
-  .axisLeft(yScale)
-  .tickFormat((d) => String(d % 24).padStart(2, '0') + ':00');
+  const xAxis = d3.axisBottom(xScale);
+  const yAxis = d3
+    .axisLeft(yScale)
+    .tickFormat((d) => String(d % 24).padStart(2, '0') + ':00');
 
 // Add X axis
-svg
-  .append('g')
-  .attr('transform', `translate(0, ${usableArea.bottom})`)
-  .call(xAxis);
+  svg
+    .append('g')
+    .attr('transform', `translate(0, ${usableArea.bottom})`)
+    .call(xAxis);
 
-// Add Y axis
-svg
-  .append('g')
-  .attr('transform', `translate(${usableArea.left}, 0)`)
-  .call(yAxis);
+// Add Y axis 
+  svg
+    .append('g')
+    .attr('transform', `translate(${usableArea.left}, 0)`)
+    .call(yAxis);
   
 // Add gridlines BEFORE the axes
-const gridlines = svg
-  .append('g')
-  .attr('class', 'gridlines')
-  .attr('transform', `translate(${usableArea.left}, 0)`);
+  const gridlines = svg
+    .append('g')
+    .attr('class', 'gridlines')
+    .attr('transform', `translate(${usableArea.left}, 0)`);
 
 // Create gridlines as an axis with no labels and full-width ticks
-gridlines.call(d3.axisLeft(yScale).tickFormat('').tickSize(-usableArea.width));
+  gridlines.call(d3.axisLeft(yScale).tickFormat('').tickSize(-usableArea.width));
 
-const dots = svg.append('g').attr('class', 'dots');
-const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
-const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
-const rScale = d3
-  .scaleSqrt() // Change only this line
-  .domain([minLines, maxLines])
-  .range([2, 30]);
-dots
-  .selectAll('circle')
-  .data(sortedCommits)
-  .join('circle')
-  .attr('cx', (d) => xScale(d.datetime))
-  .attr('cy', (d) => yScale(d.hourFrac))
-  .attr('fill', 'var(--color-accent)')
-  .attr('r', (d) => rScale(d.totalLines))
-  .style('fill-opacity', 0.7) // Add transparency for overlapping dots
-  .on('mouseenter', (event, commit) => {
-    d3.select(event.currentTarget).style('fill-opacity', 1); // Full opacity on hover
-    renderTooltipContent(commit);
-    updateTooltipVisibility(true);
-    updateTooltipPosition(event);
+  const dots = svg.append('g').attr('class', 'dots');
+  const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+  const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+  const rScale = d3
+    .scaleSqrt() // Change only this line
+    .domain([minLines, maxLines])
+    .range([2, 30]);
+  dots
+    .selectAll('circle')
+    .data(sortedCommits)
+    .join('circle')
+    .attr('cx', (d) => xScale(d.datetime))
+    .attr('cy', (d) => yScale(d.hourFrac))
+    .attr('fill', 'var(--color-accent)')
+    .attr('r', (d) => rScale(d.totalLines))
+    .style('fill-opacity', 0.7) // Add transparency for overlapping dots
+    .on('mouseenter', (event, commit) => {
+      d3.select(event.currentTarget).style('fill-opacity', 1); // Full opacity on hover
+      renderTooltipContent(commit);
+      updateTooltipVisibility(true);
+      updateTooltipPosition(event);
   })
-  .on('mouseleave', (event) => {
-    d3.select(event.currentTarget).style('fill-opacity', 0.7);
-    updateTooltipVisibility(false);
+    .on('mouseleave', (event) => {
+      d3.select(event.currentTarget).style('fill-opacity', 0.7);
+      updateTooltipVisibility(false);
   });
 
 // Create brush
-const brush = d3.brush()
-  .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]])
-  .on('start brush end', (event) => brushed(event, commits)); // pass commits
+  const brush = d3.brush()
+    .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]])
+    .on('start brush end', (event) => brushed(event, commits)); // pass commits
 
-svg.call(brush);
+  svg.call(brush);
 
 // Raise dots above the overlay so tooltips still work
-svg.selectAll('.dots, .overlay ~ *').raise();
+  svg.selectAll('.dots, .overlay ~ *').raise();
 
 }
 
