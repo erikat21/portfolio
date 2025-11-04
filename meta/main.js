@@ -29,6 +29,7 @@ function processCommits(data) {
         datetime,
         hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
         totalLines: lines.length,
+        lines : lines
       };
 
       Object.defineProperty(ret, 'propertyName', {
@@ -81,6 +82,8 @@ function renderCommitInfo(data, commits) {
 // let data = await loadData();
 // let commits = processCommits(data);
 // console.log(commits);
+let xScale, yScale; // global
+
 
 function renderScatterPlot(data, commits) {
   const width = 1000;
@@ -92,17 +95,8 @@ function renderScatterPlot(data, commits) {
   .attr('viewBox', `0 0 ${width} ${height}`)
   .style('overflow', 'visible');
 
-  const xScale = d3
-  .scaleTime()
-  .domain(d3.extent(commits, (d) => d.datetime))
-  .range([0, width])
-  .nice();
-
-  const yScale = d3.scaleLinear().domain([0, 24]).range([height, 0]);
-
-  const margin = { top: 10, right: 10, bottom: 30, left: 20 };
-
-  const usableArea = {
+const margin = { top: 10, right: 10, bottom: 30, left: 20 };
+const usableArea = {
   top: margin.top,
   right: width - margin.right,
   bottom: height - margin.bottom,
@@ -110,6 +104,16 @@ function renderScatterPlot(data, commits) {
   width: width - margin.left - margin.right,
   height: height - margin.top - margin.bottom,
 };
+
+xScale = d3.scaleTime()
+  .domain(d3.extent(commits, (d) => d.datetime))
+  .range([usableArea.left, usableArea.right])
+  .nice();
+
+yScale = d3.scaleLinear()
+  .domain([0, 24])
+  .range([usableArea.bottom, usableArea.top]);
+
 
 // Update scales with new ranges
 xScale.range([usableArea.left, usableArea.right]);
@@ -169,6 +173,16 @@ dots
     updateTooltipVisibility(false);
   });
 
+// Create brush
+const brush = d3.brush()
+  .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]])
+  .on('start brush end', (event) => brushed(event, commits)); // pass commits
+
+svg.call(brush);
+
+// Raise dots above the overlay so tooltips still work
+svg.selectAll('.dots, .overlay ~ *').raise();
+
 }
 
 function renderTooltipContent(commit) {
@@ -218,6 +232,62 @@ function updateTooltipPosition(event) {
   tooltip.style.top = `${y}px`;
 }
 
+function brushed(event, commits) {
+  const selection = event.selection;
+  d3.selectAll('circle').classed('selected', (d) =>
+    isCommitSelected(selection, d),
+  );
+  renderSelectionCount(selection, commits);
+  renderLanguageBreakdown(selection, commits);
+}
+
+
+function isCommitSelected(selection, commit) {
+  if (!selection) return false;
+  
+  const [[x0, y0], [x1, y1]] = selection;
+  const cx = xScale(commit.datetime);
+  const cy = yScale(commit.hourFrac);
+  
+  return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+}
+
+function renderSelectionCount(selection, commits) {
+  const selectedCommits = selection
+    ? commits.filter((d) => isCommitSelected(selection, d))
+    : [];
+
+  const countElement = document.querySelector('#selection-count');
+  countElement.textContent = `${selectedCommits.length || 'No'} commits selected`;
+  return selectedCommits;
+}
+
+function renderLanguageBreakdown(selection, commits) {
+  const selectedCommits = selection
+    ? commits.filter((d) => isCommitSelected(selection, d))
+    : [];
+
+  const container = document.getElementById('language-breakdown');
+  if (selectedCommits.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const lines = selectedCommits.flatMap((d) => d.lines);
+  const breakdown = d3.rollup(
+    lines,
+    (v) => v.length,
+    (d) => d.type
+  );
+
+  container.innerHTML = '';
+  for (const [language, count] of breakdown) {
+    const proportion = count / lines.length;
+    const formatted = d3.format('.1~%')(proportion);
+
+    container.innerHTML += `<dt>${language}</dt><dd>${count} lines (${formatted})</dd>`;
+  }
+}
 
 let data = await loadData();
 let commits = processCommits(data);
