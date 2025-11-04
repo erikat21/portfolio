@@ -312,3 +312,32 @@ path {
   stroke-width: 0;     /* hide the vertical axis line */
 }
 
+circle {
+  transition: 200ms;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+circle:hover {
+  transform: scale(1.5);
+}
+
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.5em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 0.75em 1em;
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  font-family: sans-serif;
+}
+
+dl.info[hidden]:not(:hover, :focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
