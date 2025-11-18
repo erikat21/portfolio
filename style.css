@@ -283,7 +283,7 @@ path {
 
 .stats dt {
   font-weight: bold;
-  color: black;
+  /* color: black; */
   grid-row: 1;
   margin-bottom: 0.2rem;
 }
@@ -316,6 +316,9 @@ circle {
   transition: 200ms;
   transform-origin: center;
   transform-box: fill-box;
+  @starting-style {
+  r: 0;
+}
 }
 
 circle:hover {
@@ -362,4 +365,15 @@ circle.selected {
   font-size: 1.5rem;
   color: var(--color-accent);
   text-transform: uppercase;
+}
+
+.commit_slider {
+  display: flex;
+  align-items: baseline;
+  flex: 1;
+  gap: 0.5rem;
+}
+
+#commit_time {
+  margin-left: auto;
 }
