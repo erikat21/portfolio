@@ -163,8 +163,9 @@ function renderScatterPlot(data, commits) {
 
   // Brush
   const brush = d3.brush()
-    .extent([[margin.left, margin.top], [margin.left + usableWidth, margin.top + usableHeight]])
-    .on('start brush end', (event) => brushed(event, filteredCommits));
+  .extent([[margin.left, margin.top], [margin.left + usableWidth, margin.top + usableHeight]])
+  .on('start brush end', (event) => brushed(event, d3.select('#chart').selectAll('circle').data()));
+
 
 
   svg.call(brush);
@@ -220,7 +221,7 @@ function updateScatterPlot(data, commits) {
     .attr('cx', (d) => xScale(d.datetime))
     .attr('cy', (d) => yScale(d.hourFrac))
     .attr('r', (d) => rScale(d.totalLines))
-    .attr('fill', 'steelblue')
+    .attr('fill', 'var(--color-accent)')
     .style('fill-opacity', 0.7) // Add transparency for overlapping dots
     .on('mouseenter', (event, commit) => {
       d3.select(event.currentTarget).style('fill-opacity', 1); // Full opacity on hover
@@ -341,6 +342,31 @@ function renderLanguageBreakdown(selection, commits) {
   }
 }
 
+function updateCommitStats(filteredCommits) {
+  const lines = filteredCommits.flatMap(d => d.lines);
+
+  const dl = d3.select('#stats dl');
+
+  // Use existing <dd> elements by index
+  const dds = dl.selectAll('dd');
+
+  dds.nodes()[0].textContent = lines.length;                      // Total LOC
+  dds.nodes()[1].textContent = filteredCommits.length;           // Total commits
+  dds.nodes()[2].textContent = d3.groups(lines, d => d.file).length; // Total files
+
+  const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const commitsByDay = d3.groups(filteredCommits, d => weekdays[d.datetime.getDay()]);
+  const dayCounts = commitsByDay.map(([day, commits]) => ({ day, count: commits.length }));
+  const mostActiveDay = d3.greatest(dayCounts, d => d.count)?.day || 'N/A';
+  dds.nodes()[3].textContent = mostActiveDay;                   // Day most work
+
+  const avgLineLength = d3.mean(lines, d => d.length) || 0;
+  dds.nodes()[4].textContent = avgLineLength.toFixed(2);        // Avg line length
+
+  const longestLineLength = d3.max(lines, d => d.length) || 0;
+  dds.nodes()[5].textContent = longestLineLength;               // Longest line
+}
+
 let commitProgress = 100;
 let timeScale = d3
   .scaleTime()
@@ -360,7 +386,8 @@ function updateSliderDisplay() {
   timeEl.textContent = commitMaxTime.toLocaleString();
   filteredCommits = commits.filter((d) => d.datetime <= commitMaxTime);
   updateScatterPlot(data, filteredCommits);
-  updateFileDisplay(filteredCommits)
+  updateFileDisplay(filteredCommits);
+  updateCommitStats(filteredCommits);
 }
 
 let colors = d3.scaleOrdinal(d3.schemeTableau10);
@@ -406,3 +433,53 @@ const timeSlider = document.getElementById("commit-progress");
 
 timeSlider.addEventListener('input', updateSliderDisplay)
 updateSliderDisplay();
+
+d3.select('#scatter-story')
+  .selectAll('.step')
+  .data(commits)
+  .join('div')
+  .attr('class', 'step')
+  .html(
+    (d, i) => `
+		On ${d.datetime.toLocaleString('en', {
+      dateStyle: 'full',
+      timeStyle: 'short',
+    })},
+		I made <a href="${d.url}" target="_blank">${
+      i > 0 ? 'another glorious commit' : 'my first commit, and it was glorious'
+    }</a>.
+		I edited ${d.totalLines} lines across ${
+      d3.rollups(
+        d.lines,
+        (D) => D.length,
+        (d) => d.file,
+      ).length
+    } files.
+		Then I looked over all I had made, and I saw that it was very good.
+	`,
+  );
+
+  import scrollama from 'https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm';
+
+const scroller = scrollama();
+
+function onStepEnter(response) {
+  const commit = response.element.__data__;
+  
+  // Filter commits to only show those up to the current one
+  const filteredCommits = commits.filter(d => d.datetime <= commit.datetime);
+
+  // Update scatter plot
+  updateScatterPlot(data, filteredCommits);
+
+  // Update files display and stats if you want
+  updateFileDisplay(filteredCommits);
+  updateCommitStats(filteredCommits); // if you implemented stats updating
+}
+
+scroller
+  .setup({
+    container: '#scrolly-1',
+    step: '#scrolly-1 .step',
+  })
+  .onStepEnter(onStepEnter);

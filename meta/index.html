@@ -5,20 +5,45 @@
     <title>Meta</title>
 </head>
 <body>
-    <h1>Meta</h1>
-    <p>
-        This page includes stats about the code of this website.
-    </p>
-    <section class = "summary">
+  <h1>Meta</h1>
+
+  <p>
+      This page includes stats about the code of this website.
+  </p>
+
+  <section class = "summary">
     <h2>Summary</h2>
     <div id = 'commit_slider'>
-    <label>
-    Show commits until:
-    <input id="commit-progress" type="range" min="0" max="100" step="1" value="0">
-    <time id="commit-time"></time>
-    </label>
+      <label>
+        Show commits until:
+        <input id="commit-progress" type="range" min="0" max="100" step="1" value="0">
+        <time id="commit-time"></time>
+      </label>
     </div>
-    <dl id="files">
+    <div id="stats"></div>
+  </section>
+<div id = 'scrolly-1'>
+  <div id = 'scatter-story'></div>
+  <div id = 'scatter-plot'>
+    <section class = "commits">
+      <h2>Commits by time of day</h2>
+      <div id="chart"></div>
+      <dl id="commit-tooltip" class="info tooltip" hidden>
+        <dt>Commit</dt>
+        <dd>
+          <a href="" id="commit-link" target="_blank"></a>
+        </dd>
+        <dt>Date</dt>
+        <dd id="commit-date"></dd>
+  <!-- Add: Time, author, lines edited -->
+      </dl>
+      <p id="selection-count">No commits selected</p>
+      <dl id="language-breakdown" class="stats"></dl>
+    </section>
+  </div>
+</div>
+
+  <dl id="files">
   <!-- we want the following structure for each file:
   <div>
     <dt>
@@ -27,24 +52,7 @@
     <dd>{file.lines.length} lines</dd>
   </div>
   -->
-</dl>
-    <div id="stats"></div>
-    </section>
-    <section class = "commits">
-    <h2>Commits by time of day</h2>
-    <div id="chart"></div>
-    <dl id="commit-tooltip" class="info tooltip" hidden>
-      <dt>Commit</dt>
-      <dd>
-        <a href="" id="commit-link" target="_blank"></a>
-      </dd>
-      <dt>Date</dt>
-      <dd id="commit-date"></dd>
-  <!-- Add: Time, author, lines edited -->
-    </dl>
-    <p id="selection-count">No commits selected</p>
-    <dl id="language-breakdown" class="stats"></dl>
-    </section>
+  </dl>
     <script type="module" src="../global.js"></script>
     <script src="main.js" type="module"></script>
 </body>
